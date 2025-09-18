@@ -256,6 +256,7 @@
       "󰪤 ",
       "󰪥 "
     ],
+    "on-click": "sh ~/.config/rofi/scripts/powermenu",
   },
 
 }

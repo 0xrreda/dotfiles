@@ -7,38 +7,41 @@
 
 window#waybar {
   background: transparent;
-  color: #d8dee9;
+  color: #c5c9c7;
 }
 
 #custom-logo {
-  color: #e5e9f0;
+  color: #e2e1df;
 }
 
 .modules-right {
-  background: #2e3440;
+  background: #14171d;
   padding: 0 10px;
   margin: 4px;
   margin-bottom: 0;
-  border: 1px solid #434c5e;
+  border: 1.5px solid #393b44;
   border-radius: 10px;
+  opacity: 0.85;
 }
 
 .modules-center {
-  background-color: #2e3440;
+  background-color: #14171d;
   padding: 0 10px;
   margin: 4px;
   margin-bottom: 0;
-  border: 1px solid #434c5e;
+  border: 1.5px solid #393b44;
   border-radius: 10px;
+  opacity: 0.85;
 }
 
 .modules-left {
-  background: #2e3440;
+  background: #14171d;
   padding: 0 10px;
   margin: 4px;
   margin-bottom: 0;
-  border: 1px solid #434c5e;
+  border: 1.5px solid #393b44;
   border-radius: 10px;
+  opacity: 0.85;
 }
 
 #battery,
@@ -72,13 +75,13 @@ window#waybar {
 }
 
 #workspaces button.visible {
-  color: white;
+  color: #c5c9c7;
 }
 
 #workspaces button:hover {
   background: transparent;
   box-shadow: none;
-  color: white;
+  color: #c5c9c7;
 }
 
 #workspaces button.urgent {
@@ -92,7 +95,7 @@ window#waybar {
 }
 
 #clock {
-  color: #81a1c1;
+  color: #658594;
 }
 
 #backlight-slider trough,
@@ -108,17 +111,17 @@ window#waybar {
 #backlight-slider highlight,
 #pulseaudio-slider highlight {
   border-radius: 8px;
-  background-color: #88c0d0;
+  background-color: #8ba4b0;
 }
 
 #battery.charging {
-  color: #a3be8c;
+  color: #8ba4b0;
   background-color: transparent;
 }
 
 #battery.warning:not(.charging) {
   background-color: transparent;
-  color: #ebcb8b;
+  color: #c4b28a;
 }
 
 #battery.critical:not(.charging) {
@@ -133,7 +136,7 @@ window#waybar {
 
 @keyframes blink {
   to {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #c5c9c7;
+    color: #14171d;
   }
 }

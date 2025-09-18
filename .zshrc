@@ -6,6 +6,7 @@ if [ ! -d "$ZINIT_HOME" ]; then
    mkdir -p "$(dirname $ZINIT_HOME)"
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
+
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
@@ -87,7 +88,6 @@ kitty-transparency() {
     fi
 }
 
-
 function yy() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	yazi "$@" --cwd-file="$tmp"
@@ -97,7 +97,29 @@ function yy() {
 	rm -f -- "$tmp"
 }
 
+grun() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: grun <file1[.c]> [file2[.c] ...]"
+    return 1
+  fi
 
+  local sources=()
+  for arg in "$@"; do
+    [[ "$arg" != *.c ]] && arg="${arg}.c"
+    if [[ ! -f "$arg" ]]; then
+      echo "File not found: $arg"
+      return 1
+    fi
+    sources+=("$arg")
+  done
+
+  local first_base="${sources[1]##*/}"
+  first_base="${first_base%.c}"
+  local output="out/${first_base}"
+
+  mkdir -p out
+  gcc "${sources[@]}" -o "$output" && "$output"
+}
 
 # bun completions
 [ -s "/home/reda/.bun/_bun" ] && source "/home/reda/.bun/_bun"
@@ -115,3 +137,6 @@ esac
 # pnpm end
 export PATH="/home/reda/.config/herd-lite/bin:$PATH"
 export PHP_INI_SCAN_DIR="/home/reda/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
+
+export PATH="$HOME/.local/bin:$PATH"
+
