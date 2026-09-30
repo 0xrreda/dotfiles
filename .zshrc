@@ -1,142 +1,100 @@
-# Set the directory we want to store zinit and plugins
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+# ─── Environment ──────────────────────────────────────────────
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR="nvim"
+export VISUAL="nvim"
 
-# Download Zinit, if it's not there yet
-if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+# ─── bat ──────────────────────────────────────────────────────
+export BAT_THEME="ansi"                                   # uses your Kitty OldWorld colors
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"         # colored man pages
+export MANROFFOPT="-c"
+
+# ─── Zinit ────────────────────────────────────────────────────
+ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone --depth 1 https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
+source "$ZINIT_HOME/zinit.zsh"
 
-# Source/Load zinit
-source "${ZINIT_HOME}/zinit.zsh"
+# ─── Keymap + options ─────────────────────────────────────────
+bindkey -e
+setopt auto_cd interactive_comments no_beep
 
+# ─── History ──────────────────────────────────────────────────
+HISTSIZE=10000
+SAVEHIST=$HISTSIZE
+HISTFILE=~/.zsh_history
+setopt append_history share_history
+setopt hist_ignore_space hist_ignore_all_dups hist_save_no_dups hist_find_no_dups hist_reduce_blanks
 
-# Add in StarShip
-eval "$(starship init zsh)"
-
-# Shell integrations
-# eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
-
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
-
-# Add in snippets
+# ─── Completions (before compinit) ────────────────────────────
+zinit ice depth=1; zinit light zsh-users/zsh-completions
 zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::aws
-zinit snippet OMZP::kubectl
-zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
-zinit snippet OMZP::docker
 
-# Load completions
-autoload -Uz compinit && compinit
-
+# ─── Compinit ─────────────────────────────────────────────────
+mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+autoload -Uz compinit
+compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 zinit cdreplay -q
 
-# Keybindings
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-
-# History
-HISTSIZE=5000
-HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
-
-# Completion styling
+# ─── Completion styling ───────────────────────────────────────
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':fzf-tab:*' switch-group '<' '>'
+zstyle ':fzf-tab:*' fzf-flags \
+  --color=bg+:#27272a,bg:#161617,fg:#c9c7cd,fg+:#c9c7cd,hl:#ea83a5,hl+:#ea83a5 \
+  --color=info:#e6b99d,prompt:#aca1cf,pointer:#9ca2cf,marker:#90b99f,header:#85b5ba
+zstyle ':fzf-tab:complete:cd:*'         fzf-preview 'eza -1 --color=always --icons=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always --icons=always $realpath'
+zstyle ':fzf-tab:complete:(cat|bat|nvim|n|vim|less):*' fzf-preview \
+  '[[ -d $realpath ]] && eza -1 --color=always --icons=always $realpath || bat --color=always --style=numbers --line-range=:200 $realpath'
 
-# Aliases
-alias ls='eza --long --icons'
+# ─── fzf (BEFORE fzf-tab, so fzf-tab owns Tab) ───────────────
+source <(fzf --zsh)
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border \
+--color=bg+:#27272a,bg:#161617,fg:#c9c7cd,fg+:#c9c7cd,hl:#ea83a5,hl+:#ea83a5 \
+--color=info:#e6b99d,prompt:#aca1cf,pointer:#9ca2cf,marker:#90b99f,spinner:#85b5ba,header:#85b5ba,border:#353539"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always --icons=always {}'"
+
+# ─── fzf-tab (after compinit + fzf, before widget plugins) ───
+zinit ice depth=1; zinit light Aloxaf/fzf-tab
+
+# ─── Suggestions + highlighting (syntax-highlighting LAST) ───
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#57575f"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+zinit ice depth=1; zinit light zsh-users/zsh-autosuggestions
+zinit ice depth=1; zinit light zsh-users/zsh-syntax-highlighting
+
+# ─── Keybindings ──────────────────────────────────────────────
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '^[[A' history-search-backward   # Up arrow
+bindkey '^[OA' history-search-backward   # Up arrow (app mode)
+bindkey '^[[B' history-search-forward    # Down arrow
+bindkey '^[OB' history-search-forward    # Down arrow (app mode)
+bindkey '^ ' autosuggest-accept          # Ctrl+Space
+
+# ─── Aliases ──────────────────────────────────────────────────
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd < "$tmp"
+  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+  rm -f -- "$tmp"
+}
+
 alias c='clear'
-alias lzg='lazygit'
-alias lzd='go run $HOME/www/lazydocker/main.go'
-alias pf="fzf --preview 'bat --style=numbers --color=always {}'"
 alias n='nvim'
+alias cat='bat --paging=never'
+alias ls='eza --icons -la'
+alias lt='eza -l --icons --tree --level=2'
+alias lzg='lazygit'
 
-
-kitty-reload() {
-    kill -SIGUSR1 $(pidof kitty)
-}
-
-kitty-transparency() {
-    echo "Do you want to enable transparent background? (y/n, default: n): "
-    read -r transparency
-
-    transparency="${transparency:-n}"
-
-    if [[ "$transparency" =~ ^[Yy]$ ]]; then
-        kitten @ set-background-opacity 0.9
-    else
-        kitten @ set-background-opacity 1
-    fi
-}
-
-function yy() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(bat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
-}
-
-grun() {
-  if [[ $# -eq 0 ]]; then
-    echo "Usage: grun <file1[.c]> [file2[.c] ...]"
-    return 1
-  fi
-
-  local sources=()
-  for arg in "$@"; do
-    [[ "$arg" != *.c ]] && arg="${arg}.c"
-    if [[ ! -f "$arg" ]]; then
-      echo "File not found: $arg"
-      return 1
-    fi
-    sources+=("$arg")
-  done
-
-  local first_base="${sources[1]##*/}"
-  first_base="${first_base%.c}"
-  local output="out/${first_base}"
-
-  mkdir -p out
-  gcc "${sources[@]}" -o "$output" && "$output"
-}
-
-# bun completions
-[ -s "/home/reda/.bun/_bun" ] && source "/home/reda/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# pnpm
-export PNPM_HOME="/home/reda/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-export PATH="/home/reda/.config/herd-lite/bin:$PATH"
-export PHP_INI_SCAN_DIR="/home/reda/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
-
-export PATH="$HOME/.local/bin:$PATH"
-
+# ─── Prompt + zoxide (zoxide LAST) ───────────────────────────
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh --cmd cd)"

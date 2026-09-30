@@ -1,2 +1,13 @@
-[manager]
+[mgr]
 show_hidden = true
+sort_dir_first = true
+
+[[plugin.prepend_fetchers]]
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+url   = "*/"
+run   = "git"
+group = "git"

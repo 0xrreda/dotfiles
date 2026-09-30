@@ -1,0 +1,48 @@
+# OldWorld — based on dgox16/oldworld.nvim
+
+[mgr]
+cwd             = { fg = "#85b5ba" }
+find_keyword    = { fg = "#e6b99d", bold = true, italic = true, underline = true }
+find_position   = { fg = "#aca1cf", bold = true, italic = true }
+symlink_target  = { fg = "#85b5ba", italic = true }
+marker_copied   = { fg = "#90b99f", bg = "#90b99f" }
+marker_cut      = { fg = "#ea83a5", bg = "#ea83a5" }
+marker_marked   = { fg = "#85b5ba", bg = "#85b5ba" }
+marker_selected = { fg = "#e6b99d", bg = "#e6b99d" }
+count_copied    = { fg = "#161617", bg = "#90b99f" }
+count_cut       = { fg = "#161617", bg = "#ea83a5" }
+count_selected  = { fg = "#161617", bg = "#e6b99d" }
+border_symbol   = "│"
+border_style    = { fg = "#353539" }
+
+[indicator]
+current = { fg = "#161617", bg = "#aca1cf", bold = true }
+preview = { bg = "#27272a" }
+
+[mode]
+normal_main = { fg = "#161617", bg = "#9ca2cf", bold = true }
+normal_alt  = { fg = "#9ca2cf", bg = "#27272a" }
+select_main = { fg = "#161617", bg = "#90b99f", bold = true }
+select_alt  = { fg = "#90b99f", bg = "#27272a" }
+unset_main  = { fg = "#161617", bg = "#ea83a5", bold = true }
+unset_alt   = { fg = "#ea83a5", bg = "#27272a" }
+
+[status]
+overall        = { fg = "#c9c7cd", bg = "#1b1b1d" }
+perm_type      = { fg = "#9ca2cf" }
+perm_read      = { fg = "#e6b99d" }
+perm_write     = { fg = "#ea83a5" }
+perm_exec      = { fg = "#90b99f" }
+perm_sep       = { fg = "#57575f" }
+progress_label  = { fg = "#c9c7cd", bold = true }
+progress_normal = { fg = "#9ca2cf", bg = "#27272a" }
+progress_error  = { fg = "#ea83a5", bg = "#27272a" }
+
+[git]
+unstaged  = { fg = "#e6b99d" }
+staged    = { fg = "#90b99f" }
+added     = { fg = "#90b99f" }
+untracked = { fg = "#aca1cf" }
+deleted   = { fg = "#ea83a5", bold = true }
+updated   = { fg = "#9ca2cf" }
+ignored   = { fg = "#57575f" }

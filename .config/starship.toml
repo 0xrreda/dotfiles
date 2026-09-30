@@ -1,0 +1,105 @@
+format = """
+[](#aca1cf)\
+$os\
+$username\
+[](bg:#9ca2cf fg:#aca1cf)\
+$directory\
+[](fg:#9ca2cf bg:#353539)\
+$git_branch\
+$git_status\
+[](fg:#353539 bg:#27272a)\
+$nodejs\
+$java\
+$rust\
+$golang\
+$php\
+$c\
+$lua\
+$python\
+[](fg:#27272a bg:#1b1b1d)\
+$docker_context\
+[ ](fg:#1b1b1d)\
+\n$character"""
+
+[username]
+show_always = true
+format = '[$user](bg:#aca1cf fg:#161617)'
+
+[os]
+disabled = false
+style = "bg:#aca1cf fg:#161617"
+
+[os.symbols]
+Ubuntu = "󰕈 "
+
+[directory]
+style = "fg:#161617 bg:#9ca2cf"
+format = "[ $path ]($style)"
+truncation_length = 1
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"www" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:#353539"
+format = '[[ $symbol $branch ](fg:#9ca2cf bg:#353539)]($style)'
+
+[git_status]
+style = "bg:#353539"
+format = '[[($all_status$ahead_behind )](fg:#9ca2cf bg:#353539)]($style)'
+
+[nodejs]
+symbol = " "
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[java]
+symbol = " "
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[php]
+symbol = ""
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[c]
+symbol = " "
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[lua]
+symbol = " "
+style = "bg:#27272a"
+format = '[[ $symbol ($version) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[python]
+symbol = " "
+style = "bg:#27272a"
+format = '[[ $symbol( $version)(\(#$virtualenv\)) ](fg:#9ca2cf bg:#27272a)]($style)'
+
+[docker_context]
+symbol = " "
+style = "bg:#1b1b1d"
+format = '[[ $symbol( $context) ](fg:#85b5ba bg:#1b1b1d)]($style)'
+
+
+[character]
+disabled = false
+success_symbol = '[](bold fg:#90b99f)'
+error_symbol = '[](bold fg:#ea83a5)'
